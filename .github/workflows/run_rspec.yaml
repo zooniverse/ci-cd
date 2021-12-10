@@ -1,0 +1,62 @@
+name: Run Rspec
+
+on:
+  # Run this workflow from other workflows
+  workflow_call:
+    inputs:
+      db_name:
+        description: 'Name of Postgres database'
+        required: true
+        type: string
+      ruby_version:
+        description: 'Version of Ruby to use'
+        required: true
+        type: string
+    secrets:
+      creds:
+        required: true
+
+env:
+  DATABASE_URL_TEST: postgresql://postgres:postgres@localhost/${{ inputs.db_name }}
+  RAILS_ENV: test
+
+jobs:
+  tests:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:11
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+        - 5432:5432
+        options:
+          --health-cmd pg_isready
+          --health-interval 10ms
+          --health-timeout 500ms
+          --health-retries 15
+      redis:
+        image: redis
+        ports:
+          - 6379:6379
+        options: --entrypoint redis-server
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Check for focused specs
+        run: ./scripts/no_focus.sh
+
+      - name: Setup Ruby and install gems
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ inputs.ruby_version }}
+          bundler-cache: true
+
+      - name: Setup test database
+        run: bin/rails db:create
+
+      - name: Run tests
+        run: bundle exec rspec
