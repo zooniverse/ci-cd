@@ -12,9 +12,6 @@ on:
         description: 'Version of Ruby to use'
         required: true
         type: string
-    secrets:
-      creds:
-        required: true
 
 env:
   DATABASE_URL_TEST: postgresql://postgres:postgres@localhost/${{ inputs.db_name }}
