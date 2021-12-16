@@ -12,6 +12,11 @@ on:
         description: 'Path to target folder'
         required: true
         type: string
+      max_age:
+        description: 'max-age for non-index.html files'
+        default: 604800
+        required: false
+        type: string
     secrets:
       creds:
         required: true
@@ -52,6 +57,6 @@ jobs:
           rm ./commit_id.txt
           az storage blob upload-batch \
             --account-name zooniversestatic \
-            --content-cache-control 'public, immutable, max-age=604800' \
+            --content-cache-control 'public, immutable, max-age=${{ inputs.max_age }}' \
             --destination '$web/${{ inputs.target }}' \
             --source ./
