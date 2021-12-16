@@ -34,7 +34,7 @@ jobs:
     steps:
       - name: Get associated PR info
         run: |
-          response=$(curl https://api.github.com/repos/zooniverse/${{ github.repository }}/commits/${{ inputs.commit_id }}/pulls)
+          response=$(curl https://api.github.com/repos/${{ github.repository }}/commits/${{ inputs.commit_id }}/pulls)
           echo "PR_URL=$(jq -r '.[].html_url' <<< "${response}")" >> $GITHUB_ENV
           echo "PR_TITLE=$(jq -r '.[].title' <<< "${response}")" >> $GITHUB_ENV
 
