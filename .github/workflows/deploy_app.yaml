@@ -71,8 +71,8 @@ jobs:
         context: .
         push: true
         tags: |
-          ghcr.io/zooniverse/{{ inputs.repo_name }}:${{ inputs.commit_id }}
-          ghcr.io/zooniverse/{{ inputs.repo_name }}:latest
+          ghcr.io/zooniverse/${{ inputs.repo_name }}:${{ inputs.commit_id }}
+          ghcr.io/zooniverse/${{ inputs.repo_name }}:latest
         cache-from: type=gha
         cache-to: type=gha,mode=max
 
