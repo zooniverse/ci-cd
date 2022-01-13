@@ -1,4 +1,4 @@
-name: Run Production Task
+name: Run Rails Task
 
 on:
   # Run this workflow from other workflows
@@ -9,6 +9,10 @@ on:
         required: true
         type: string
       environment:
+        description: 'environment to affect'
+        required: true
+        type: string
+      task_name:
         description: 'environment to affect'
         required: true
         type: string
