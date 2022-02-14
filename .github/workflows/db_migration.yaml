@@ -32,7 +32,7 @@ jobs:
 
       - name: Set environment variables
         run: |
-          echo "DEPLOYED_IMAGE_TAG=$(kubectl get deployment {{ inputs.app_name }}-${{ inputs.environment }}-app -o=jsonpath='{$.spec.template.spec.containers[:1].image}' | cut -d':' -f 2)" >> $GITHUB_ENV
+          echo "DEPLOYED_IMAGE_TAG=$(kubectl get deployment ${{ inputs.app_name }}-${{ inputs.environment }}-app -o=jsonpath='{$.spec.template.spec.containers[:1].image}' | cut -d':' -f 2)" >> $GITHUB_ENV
           echo "JOB_NAME=${{ inputs.app_name }}-db-migration-${{ inputs.environment }}-${{ github.run_number }}" >> $GITHUB_ENV
 
       - name: Modify & apply template
