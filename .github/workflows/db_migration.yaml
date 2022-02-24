@@ -12,6 +12,10 @@ on:
         description: 'environment to affect'
         required: true
         type: string
+      commit_id:
+        description: 'HEAD commit hash'
+        required: true
+        type: string
     secrets:
       creds:
         required: true
@@ -32,12 +36,11 @@ jobs:
 
       - name: Set environment variables
         run: |
-          echo "DEPLOYED_IMAGE_TAG=$(kubectl get deployment ${{ inputs.app_name }}-${{ inputs.environment }}-app -o=jsonpath='{$.spec.template.spec.containers[:1].image}' | cut -d':' -f 2)" >> $GITHUB_ENV
           echo "JOB_NAME=${{ inputs.app_name }}-db-migration-${{ inputs.environment }}-${{ github.run_number }}" >> $GITHUB_ENV
 
       - name: Modify & apply template
         run: |
-          sed "s/__IMAGE_TAG__/$DEPLOYED_IMAGE_TAG/g" ./kubernetes/db-migrate-${{ inputs.environment }}.tmpl \
+          sed "s/__IMAGE_TAG__/${{ inputs.commit_id }}/g" ./kubernetes/db-migrate-${{ inputs.environment }}.tmpl \
             | sed "s/__JOB_NAME__/$JOB_NAME/g" \
             | kubectl apply -f -
 
