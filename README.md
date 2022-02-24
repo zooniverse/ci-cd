@@ -23,6 +23,20 @@ jobs:
       ruby_version: 2.6.5
 ```
 
+### Deploy a Rails app in Kubernetes
+```yaml
+  deploy_staging:
+    name: Deploy to Staging
+    uses: zooniverse/ci-cd/.github/workflows/deploy_app.yaml@main
+    with:
+      app_name: myapp
+      repo_name: myapp
+      commit_id: ${{ github.sha }}
+      environment: staging
+    secrets:
+      creds: ${{ secrets.AZURE_AKS }}
+```
+
 ### Build and deploy a static site
 ```yaml
 name: Deploy App to Production
