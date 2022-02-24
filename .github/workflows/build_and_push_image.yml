@@ -1,0 +1,41 @@
+name: Build & Push Image
+
+on:
+  # Run this workflow from other workflows
+  workflow_call:
+    inputs:
+      repo_name:
+        description: 'Name of app repo for Docker image'
+        required: true
+        type: string
+      commit_id:
+        description: 'HEAD commit hash'
+        required: true
+        type: string
+
+jobs:
+  build_and_push_image:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Build and push
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        push: true
+        tags: |
+          ghcr.io/zooniverse/${{ inputs.repo_name }}:${{ inputs.commit_id }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
