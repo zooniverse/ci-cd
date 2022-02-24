@@ -44,7 +44,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Check for focused specs
-        run: \! grep -R "\(describe\|context\|it\).*\(:focus\|focus:\)" spec/
+        run: ./scripts/no_focus.sh
 
       - name: Setup Ruby and install gems
         uses: ruby/setup-ruby@v1
