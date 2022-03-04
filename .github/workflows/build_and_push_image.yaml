@@ -48,6 +48,6 @@ jobs:
       with:
         context: .
         push: true
-        tags: ${{ steps.outputs.create_tags.tag }}
+        tags: ${{ steps.create_tags.outputs.tag }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
