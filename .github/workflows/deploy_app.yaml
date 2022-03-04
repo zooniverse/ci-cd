@@ -56,10 +56,6 @@ jobs:
           exit 1
         fi
 
-    - name: Create commit.txt
-      run: |
-        echo ${{ inputs.commit_id }} > commit_id.txt
-
     - name: Modify & apply template
       run: |
         sed "s/__IMAGE_TAG__/${{ inputs.commit_id }}/g" ./kubernetes/deployment-${{ inputs.environment }}.tmpl \

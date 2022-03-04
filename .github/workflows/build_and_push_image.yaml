@@ -43,6 +43,9 @@ jobs:
         echo $tag
         echo ::set-output name=tag::$tag
 
+    - name: Create commit_id.txt
+      run: echo ${{ inputs.commit_id }} > commit_id.txt
+
     - name: Build and push
       uses: docker/build-push-action@v2
       with:
