@@ -12,6 +12,11 @@ on:
         description: 'HEAD commit hash'
         required: true
         type: string
+      latest:
+        description: 'Tag the image with latest?'
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   build_and_push_image:
@@ -30,11 +35,18 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
 
+    - name: Create registry tags
+      id: create_tags
+      run: |
+        tag="ghcr.io/zooniverse/${{ inputs.repo_name }}:${{ inputs.commit_id }}"
+        if [ ${{ github.inputs.latest }} = true ]; then tag="$tag,ghcr.io/zooniverse/${{ inputs.repo_name }}:latest"; fi
+        echo ::set-output name=tag::$tag
+
     - name: Build and push
       uses: docker/build-push-action@v2
       with:
         context: .
         push: true
-        tags: ghcr.io/zooniverse/${{ inputs.repo_name }}:${{ inputs.commit_id }}
+        tags: ${{ steps.create_tags.tag }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
