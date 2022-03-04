@@ -39,7 +39,7 @@ jobs:
       id: create_tags
       run: |
         tag="ghcr.io/zooniverse/${{ inputs.repo_name }}:${{ inputs.commit_id }}"
-        if [ ${{ github.inputs.latest }} = true ]; then tag="$tag,ghcr.io/zooniverse/${{ inputs.repo_name }}:latest"; fi
+        if [ "${{ inputs.latest }}" = true ]; then tag="$tag,ghcr.io/zooniverse/${{ inputs.repo_name }}:latest"; fi
         echo ::set-output name=tag::$tag
 
     - name: Build and push
