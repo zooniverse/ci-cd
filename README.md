@@ -23,8 +23,34 @@ jobs:
       ruby_version: 2.6.5
 ```
 
-### Deploy a Rails app in Kubernetes
+### Build and push a Docker image to GHCR
+This is useful for ensuring that an image exists before a deploy & migrate. This example will build on every pull request update, but this workflow can also be used as a part of larger deploy jobs to avoid excessive building. You can also optionally add the `latest` tag (defaults to false) if you're updating on push to master.
+
 ```yaml
+name: Build and Push Image
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build_and_push_image:
+    name: Build and Push Image
+    uses: zooniverse/ci-cd/.github/workflows/build_and_push_image.yaml@main
+    with:
+      repo_name: education-api
+      commit_id: ${{ github.sha }}
+      latest: true
+```
+
+### Deploy a Rails app in Kubernetes
+This is a staging deploy (push to master) that would likely also need a Docker build/push (above) and a database migration (below).
+```yaml
+on:
+  push:
+    branches:
+      - master
+
   deploy_staging:
     name: Deploy to Staging
     uses: zooniverse/ci-cd/.github/workflows/deploy_app.yaml@main
@@ -90,7 +116,7 @@ slack_notification:
 
 ### Run something in a Kubernetes pod, like a Rails rake task or a migration
 
-These require a corresponding Kubernetes template in the app's `/kubernetes` folder. This will instantiate a new Job pod with the same image as the current deployment. It will run the specified action (task or migration) and log the results in the runner's console. Use the Slack notification workflow above to report its status to chat. Azure credentials are required for managing these AKS deployments.
+These require a corresponding Kubernetes template in the app's `/kubernetes` folder. This will instantiate a new Job pod with the same image as the current deployment. It will run the specified action and log the results in the runner's console. Use the Slack notification workflow above to report its status to chat. Azure credentials are required for these, as they manage these AKS deployments. In the case of a deploy, you can ensure a migration finishes successfully by including `needs: migration_step_name`.
 
 DB Migration:
 ```yaml
@@ -106,9 +132,12 @@ jobs:
   db_migration_production:
     name: Production DB Migration
     uses: zooniverse/ci-cd/.github/workflows/db_migration.yaml@main
+    # Ensure the deploy job successfully updates the deployment pod
+    needs: deploy_production
     with:
       app_name: myapp
       environment: production
+      commit_id: ${{ github.sha }}
     secrets:
       creds: ${{ secrets.AZURE_AKS }}
 ```
