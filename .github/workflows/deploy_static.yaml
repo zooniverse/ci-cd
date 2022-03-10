@@ -46,6 +46,7 @@ jobs:
             --content-cache-control 'public, max-age=60' \
             --overwrite \
             --container-name '$web' \
+            --content-type 'text/html' \
             --name '${{ inputs.target }}/index.html' \
             --file './index.html'
           rm ./index.html
@@ -54,6 +55,7 @@ jobs:
             --content-cache-control 'public, max-age=60' \
             --overwrite \
             --container-name '$web' \
+            --content-type 'text/plain' \
             --name '${{ inputs.target }}/commit_id.txt' \
             --file './commit_id.txt'
           rm ./commit_id.txt
