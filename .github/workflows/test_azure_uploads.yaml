@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  test_uploads:
+  build_files:
     runs-on: ubuntu-latest
     steps:
     - name: Create test files
@@ -22,10 +22,11 @@ jobs:
         name: upload-test
         path: .
 
-    - name: Upload to blob storage
-      uses: zooniverse/ci-cd/.github/workflows/deploy_static.yaml@main
-      with:
-        source: 'upload-test'
-        target: 'upload-test'
-      secrets:
-        creds: ${{ secrets.AZURE_STATIC_SITES }}
+  upload_test:
+    name: Upload to blob storage
+    uses: zooniverse/ci-cd/.github/workflows/deploy_static.yaml@main
+    with:
+      source: 'upload-test'
+      target: 'upload-test'
+    secrets:
+      creds: ${{ secrets.AZURE_STATIC_SITES }}
