@@ -16,31 +16,16 @@ jobs:
         curl --output zoologobw.jpg https://raw.githubusercontent.com/zooniverse/Brand/master/style%20guide/logos/zooniverse-emblem/zooniverse-logo-black.jpg
         curl --output zoologoteal.png https://raw.githubusercontent.com/zooniverse/Brand/master/style%20guide/logos/zooniverse-emblem/zooniverse-logo-teal.png
 
-    - uses: azure/login@v1
+    - name: Save build
+      uses: actions/upload-artifact@v2
       with:
-        creds: ${{ secrets.AZURE_STATIC_SITES }}
+        name: upload-test
+        path: .
 
     - name: Upload to blob storage
-      uses: azure/CLI@v1
+      uses: zooniverse/ci-cd/.github/workflows/deploy_static.yaml@main
       with:
-        inlineScript: |
-          az version
-          az storage blob upload \
-            --account-name zooniversestatic \
-            --content-cache-control 'public, max-age=60' \
-            --container-name '$web' \
-            --name 'uploadtest/index.html' \
-            --file './index.html'
-          rm ./index.html
-          az storage blob upload \
-            --account-name zooniversestatic \
-            --content-cache-control 'public, max-age=60' \
-            --container-name '$web' \
-            --name 'uploadtest/commit_id.txt' \
-            --file './commit_id.txt'
-          rm ./commit_id.txt
-          az storage blob upload-batch \
-            --account-name zooniversestatic \
-            --content-cache-control 'public, immutable, max-age=604800' \
-            --destination '$web/uploadtest' \
-            --source ./
+        source: 'upload-test'
+        target: 'upload-test'
+      secrets:
+        creds: ${{ secrets.AZURE_STATIC_SITES }}
