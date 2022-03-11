@@ -1,0 +1,31 @@
+name: Test Azure Uploads
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test_uploads:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Create test files
+      run: |
+        echo "<!doctype html><html lang="en"><head><title>Testing HTML Pages</title></head><body><p>This is some html!</p></body></html>" > index.html
+        echo "3e8245739f934e71ef0ea21730086875a084c093" > commit_id.txt
+        echo "console.log()" > javascript.js
+        curl --output zoologobw.jpg https://raw.githubusercontent.com/zooniverse/Brand/master/style%20guide/logos/zooniverse-emblem/zooniverse-logo-black.jpg
+        curl --output zoologoteal.png https://raw.githubusercontent.com/zooniverse/Brand/master/style%20guide/logos/zooniverse-emblem/zooniverse-logo-teal.png
+
+    - name: Save build
+      uses: actions/upload-artifact@v2
+      with:
+        name: upload-test
+        path: .
+
+    - name: Upload to blob storage
+      uses: zooniverse/ci-cd/.github/workflows/deploy_static.yaml@main
+      with:
+        source: 'upload-test'
+        target: 'upload-test'
+      secrets:
+        creds: ${{ secrets.AZURE_STATIC_SITES }}
