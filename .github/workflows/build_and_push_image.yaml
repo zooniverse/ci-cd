@@ -17,6 +17,11 @@ on:
         required: false
         default: false
         type: boolean
+      build_args:
+        description: 'build-args to docker'
+        required: false
+        default: ''
+        type: string
 
 jobs:
   build_and_push_image:
@@ -52,5 +57,6 @@ jobs:
         context: .
         push: true
         tags: ${{ steps.create_tags.outputs.tag }}
+        build-args: ${{ inputs.build_args }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
