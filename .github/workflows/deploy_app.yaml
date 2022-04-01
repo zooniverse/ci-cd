@@ -20,6 +20,11 @@ on:
         description: 'environment to affect'
         required: true
         type: string
+      deploy_check:
+        description: 'Check current deployment?'
+        required: false
+        default: true
+        type: boolean
     secrets:
       creds:
         required: true
@@ -46,10 +51,12 @@ jobs:
         resource-group: kubernetes
 
     - name: Get current deploy
+      if: ${{ inputs.deploy_check }}
       run: |
         echo "DEPLOYED_IMAGE_TAG=$(kubectl get deployment ${{ inputs.app_name }}-${{ inputs.environment }}-app -o=jsonpath='{$.spec.template.spec.containers[:1].image}' | cut -d':' -f 2)" >> $GITHUB_ENV
 
     - name: Check if deploy is necessary
+      if: ${{ inputs.deploy_check }}
       run: |
         if [ $DEPLOYED_IMAGE_TAG == ${{ inputs.commit_id }} ]; then
           echo "::warning::Deployed image matches latest commit, no new code to deploy. "
