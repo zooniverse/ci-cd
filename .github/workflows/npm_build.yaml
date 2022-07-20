@@ -43,7 +43,7 @@ jobs:
       run: echo ${HEAD_COMMIT} > ./${{ inputs.output }}/commit_id.txt
 
     - name: Save build
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: ${{ inputs.output }}
         path: ./${{ inputs.output }}/
