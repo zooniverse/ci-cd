@@ -12,6 +12,11 @@ on:
         description: 'HEAD commit hash'
         required: true
         type: string
+      file:
+        description: 'The dockerfile to build the image against'
+        required: false
+        default: 'Dockerfile'
+        type: string
       latest:
         description: 'Tag the image with latest?'
         required: false
@@ -55,6 +60,7 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: .
+        file: ${{ inputs.file }}
         push: true
         tags: ${{ steps.create_tags.outputs.tag }}
         build-args: ${{ inputs.build_args }}
