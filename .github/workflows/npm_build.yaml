@@ -17,6 +17,11 @@ on:
         description: 'npm build script'
         required: true
         type: string
+      ci_args:
+        default: ''
+        description: 'npm ci args'
+        required: false
+        type: string
       output:
         description: 'Output directory name'
         required: true
@@ -36,7 +41,7 @@ jobs:
       with:
         node-version: ${{ inputs.node_version }}
         cache: 'npm'
-    - run: npm ci
+    - run: npm ci ${{ inputs.ci_args }}
     - run: npm run ${{ inputs.script }}
 
     - name: Write commit_id.txt
