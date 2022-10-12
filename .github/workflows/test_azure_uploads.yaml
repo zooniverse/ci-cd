@@ -17,7 +17,7 @@ jobs:
         curl --output zoologoteal.png https://raw.githubusercontent.com/zooniverse/Brand/master/style%20guide/logos/zooniverse-emblem/zooniverse-logo-teal.png
 
     - name: Save build
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@@v3
       with:
         name: upload-test
         path: .
