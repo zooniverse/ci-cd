@@ -35,7 +35,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3.1.0
       with:
-        repository: ${{ inputs.repo_name }}
+        repository: zooniverse/${{ inputs.repo_name }}
 
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v1
