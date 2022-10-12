@@ -1,0 +1,43 @@
+name: Test GHCR & AKS Connections
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build_and_push_image:
+    name: Build and Push Image
+    uses: zooniverse/ci-cd/.github/workflows/build_and_push_image.yaml@main
+    with:
+      repo_name: docker-alpine
+      commit_id: ${{ github.sha }}
+
+  test_aks_connection:
+    name: Test AKS Connection
+    needs: build_and_push_image
+    uses: zooniverse/ci-cd/.github/workflows/deploy_app.yaml@main
+    with:
+      app_name: alpine-ci-test
+      repo_name: docker-alpine
+      commit_id: ${{ github.sha }}
+      environment: testing
+      deploy_check: false
+    secrets:
+      creds: ${{ secrets.AZURE_AKS }}
+
+  cleanup:
+    runs-on: ubuntu-latest
+    needs: test_aks_connection
+    steps:
+    - uses: azure/login@v1
+      with:
+       creds: ${{ secrets.AZURE_AKS }}
+
+    - uses: azure/aks-set-context@v3
+      with:
+       resource-group: kubernetes
+       cluster-name: microservices
+
+    - name: Delete test pod
+      run: |
+        kubectl delete pod alpine-ci-test
