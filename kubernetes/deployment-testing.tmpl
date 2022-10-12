@@ -5,12 +5,12 @@ metadata:
   labels:
     purpose: test_aks_connection
 spec:
+  restartPolicy: Never
   containers:
   - name: alpine-ci-test
     image: ghcr.io/zooniverse/docker-alpine:__IMAGE_TAG__
     command: ["echo"]
     args: ["hello", "world"]
-    restartPolicy: Never
     resources:
       requests:
         cpu: 50m
