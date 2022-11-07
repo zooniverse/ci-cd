@@ -8,10 +8,6 @@ on:
         description: 'Name of app to get current k8s deployment'
         required: true
         type: string
-      repo_name:
-        description: 'Name of app repo for Docker image'
-        required: true
-        type: string
       commit_id:
         description: 'HEAD commit hash'
         required: true
