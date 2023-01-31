@@ -24,7 +24,7 @@ jobs:
 
   upload_test:
     name: Upload to blob storage
-    uses: zooniverse/ci-cd/.github/workflows/deploy_static.yaml@${{ GITHUB_REF_NAME }}
+    uses: zooniverse/ci-cd/.github/workflows/deploy_static.yaml@$GITHUB_REF_NAME
     needs: build_files
     with:
       source: 'upload-test'
