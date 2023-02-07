@@ -53,7 +53,7 @@ jobs:
         tag="ghcr.io/zooniverse/${{ inputs.repo_name }}:${{ inputs.commit_id }}"
         if [ "${{ inputs.latest }}" = true ]; then tag="$tag,ghcr.io/zooniverse/${{ inputs.repo_name }}:latest"; fi
         echo $tag
-        echo "{tag}={$tag}" >> $GITHUB_OUTPUT
+        echo "tag=$tag" >> $GITHUB_OUTPUT
 
     - name: Create commit_id.txt
       run: echo ${{ inputs.commit_id }} > commit_id.txt
