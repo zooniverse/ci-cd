@@ -41,7 +41,7 @@ jobs:
       repo_name: education-api
       commit_id: ${{ github.sha }}
       latest: true
-      build-args: |
+      build_args: |
         APP_ENV=staging
 ```
 
