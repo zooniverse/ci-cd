@@ -24,7 +24,7 @@ jobs:
 ```
 
 ### Build and push a Docker image to GHCR
-This is useful for ensuring that an image exists before a deploy & migrate. This example will build on every pull request update, but this workflow can also be used as a part of larger deploy jobs to avoid excessive building. You can also optionally add the `latest` tag (defaults to false) if you're updating on push to master.
+This is useful for ensuring that an image exists before a deploy & migrate. This example will build on every pull request update, but this workflow can also be used as a part of larger deploy jobs to avoid excessive building. You can also optionally add the `latest` tag (defaults to false) if you're updating on push to master. Extra build arguments can be specified with `build-args`, sent as a string.
 
 ```yaml
 name: Build and Push Image
@@ -41,6 +41,8 @@ jobs:
       repo_name: education-api
       commit_id: ${{ github.sha }}
       latest: true
+      build-args: |
+        APP_ENV=staging
 ```
 
 ### Deploy a Rails app in Kubernetes
