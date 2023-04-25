@@ -27,12 +27,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3.5.2
 
-      - name: Set the target AKS cluster
-        uses: Azure/aks-set-context@v1
+      - uses: azure/login@v1
         with:
-          creds: '${{ secrets.creds }}'
-          cluster-name: microservices
-          resource-group: kubernetes
+         creds: ${{ secrets.creds }}
+
+      - uses: azure/aks-set-context@v3
+        with:
+         resource-group: kubernetes
+         cluster-name: microservices
 
       - name: Set environment variables
         run: |
