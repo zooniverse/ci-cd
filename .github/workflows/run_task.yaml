@@ -13,7 +13,7 @@ on:
         required: true
         type: string
       task_name:
-        description: 'environment to affect'
+        description: 'name of task to run'
         required: true
         type: string
     secrets:
@@ -44,7 +44,7 @@ jobs:
         run: |
           sed "s/__IMAGE_TAG__/$DEPLOYED_IMAGE_TAG/g" ./kubernetes/job-task-${{ inputs.environment }}.tmpl \
             | sed "s/__JOB_NAME__/$JOB_NAME/g" \
-            | sed "s/__TASK_NAME__/${{ inputs.task_name }}/g" \
+            | sed "s/__RAKE_TASK_NAME__/${{ inputs.task_name }}/g" \
             | kubectl apply -f -
 
       - name: Wait for completion or failure
