@@ -28,7 +28,7 @@ jobs:
     env:
       HEAD_COMMIT: ${{ inputs.commit_id }}
     steps:
-    - uses: actions/checkout@v3.5.2
+    - uses: actions/checkout@v3.6.0
 
     - name: Node.js build
       id: build
