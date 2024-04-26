@@ -24,13 +24,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v4
 
       - uses: azure/login@v2
         with:
          creds: ${{ secrets.creds }}
 
-      - uses: azure/aks-set-context@v3
+      - uses: azure/aks-set-context@v4
         with:
          resource-group: kubernetes
          cluster-name: microservices
