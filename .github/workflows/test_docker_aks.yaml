@@ -33,7 +33,7 @@ jobs:
       with:
        creds: ${{ secrets.AZURE_AKS }}
 
-    - uses: azure/aks-set-context@v3
+    - uses: azure/aks-set-context@v4
       with:
        resource-group: kubernetes
        cluster-name: microservices
