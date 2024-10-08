@@ -1,0 +1,15 @@
+name: Test Cache Purge
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test_cache_purge:
+    name: Purge cached file
+    uses: ./.github/workflows/purge_cache.yaml
+    with:
+      fdname: 'frontend-preview-zooniverse-org'
+      path: '/assets/star.jpg'
+    secrets:
+      creds: ${{ secrets.AZURE_AKS }}
