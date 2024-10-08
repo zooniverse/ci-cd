@@ -96,6 +96,25 @@ jobs:
       creds: ${{ secrets.AZURE_STATIC_SITES }}
 ```
 
+### Purge the Front Door cache for a specific AFD instance and content path
+```yaml
+name: Purge Star
+on:
+  push:
+    tags:
+      - production-release
+
+jobs:
+  purge_cached_star:
+    name: Purge cached file
+    uses: zooniverse/ci-cd/.github/workflows/purge_cache.yaml@main
+    with:
+      fdname: 'frontend-preview-zooniverse-org'
+      path: '/assets/star.jpg'
+    secrets:
+      creds: ${{ secrets.AZURE_STATIC_SITES }}
+```
+
 ### Send a Slack notification
 ```yaml
 slack_notification:
