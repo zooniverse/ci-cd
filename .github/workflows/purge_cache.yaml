@@ -1,0 +1,36 @@
+name: Purge Front Door Cache
+
+on:
+  # Run this workflow from other workflows
+  workflow_call:
+    inputs:
+      fdname:
+        description: 'Front Door Name'
+        required: true
+        type: string
+      path:
+        description: 'Content path to purge'
+        required: true
+        type: string
+    secrets:
+      creds:
+        required: true
+
+jobs:
+  purge_cache:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Log in
+      uses: azure/login@v2
+      with:
+        creds: ${{ secrets.creds }}
+
+    - name: Purge Cache Path
+      id: upload
+      uses: azure/CLI@v2
+      with:
+        inlineScript: |
+          az network front-door purge-endpoint \
+            --resource-group 'static-sites' \
+            --name '${{ inputs.fdname }}' \
+            --content-paths '${{ inputs.path }}'
