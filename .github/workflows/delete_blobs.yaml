@@ -1,0 +1,32 @@
+name: Delete blob from web storage
+
+on:
+  # Run this workflow from other workflows
+  workflow_call:
+    inputs:
+      target:
+        description: 'Full path (minus container name) to target blob'
+        required: true
+        type: string
+    secrets:
+      creds:
+        required: true
+
+jobs:
+  delete_blobs:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/login@v2
+      with:
+        creds: ${{ secrets.creds }}
+
+    - name: Delete web blob recursively
+      id: delete
+      uses: azure/CLI@v2
+      with:
+        inlineScript: |
+          az storage blob delete-batch
+            --account-name zooniversestatic
+            --source '$web'
+            --pattern '${{ inputs.target }}/*'
+            --dryrun
