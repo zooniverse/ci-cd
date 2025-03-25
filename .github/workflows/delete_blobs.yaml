@@ -25,8 +25,8 @@ jobs:
       uses: azure/CLI@v2
       with:
         inlineScript: |
-          az storage blob delete-batch
-            --account-name zooniversestatic
-            --source '$web'
-            --pattern '${{ inputs.target }}/*'
+          az storage blob delete-batch \
+            --account-name zooniversestatic \
+            --source '$web' \
+            --pattern '${{ inputs.target }}/*' \
             --dryrun

@@ -31,3 +31,12 @@ jobs:
       target: 'upload-test'
     secrets:
       creds: ${{ secrets.AZURE_STATIC_SITES }}
+
+  delete_test:
+    name: Delete from blob storage
+    uses: ./.github/workflows/delete_blobs.yaml
+    needs: upload_test
+    with:
+      target: 'upload-test'
+    secrets:
+      creds: ${{ secrets.AZURE_STATIC_SITES }}
