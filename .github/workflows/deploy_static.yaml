@@ -14,7 +14,7 @@ on:
         type: string
       max_age:
         description: 'max-age for non-index.html files'
-        default: 604800
+        default: '604800'
         required: false
         type: string
     secrets:
@@ -38,7 +38,6 @@ jobs:
       id: upload
       uses: azure/CLI@v2
       with:
-        azcliversion: 2.33.1
         inlineScript: |
           az storage blob upload \
             --account-name zooniversestatic \
