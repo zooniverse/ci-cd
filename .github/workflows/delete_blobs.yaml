@@ -24,7 +24,10 @@ jobs:
       id: delete
       uses: azure/CLI@v2
       with:
+        # Pin version due to bug: https://github.com/Azure/azure-cli/issues/32039
+        azcliversion: 2.76.0
         inlineScript: |
+          echo "Deleting blobs in path: ${{ inputs.target }}/*"
           az storage blob delete-batch \
             --account-name zooniversestatic \
             --source '$web' \
