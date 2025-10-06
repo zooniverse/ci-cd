@@ -21,13 +21,8 @@ jobs:
             }
         EOF
 
-  deploy_test:
-    name: Deploy to AWS
-    uses: ./.github/workflows/deploy_lambda_function.yaml
-    needs: build_files
-    with:
-      function: 'cicd-test-lambda'
-      directory: 'lambda-upload-test'
-    secrets:
-      aws_access_key_id: ${{ secrets.LAMBDA_AWS_ACCESS_KEY_ID }}
-      aws_secret_access_key: ${{ secrets.LAMBDA_AWS_SECRET_ACCESS_KEY }}
+    - name: Deploy to AWS
+      uses: ./.github/workflows/deploy_lambda_function.yaml
+      with:
+        function: 'cicd-test-lambda'
+        directory: 'lambda-upload-test'
