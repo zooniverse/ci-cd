@@ -1,0 +1,33 @@
+name: Test Lambda Deployment
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build_files:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Create Lambda test script
+      run: |
+        mkdir -p lambda-upload-test
+        cat <<EOF > lambda-upload-test/cicd-test-lambda.py
+        import requests
+        def lambda_handler(event, context):
+            print("Executing test lambda function.")
+            return {
+                'statusCode': 200,
+                'body': 'Success'
+            }
+        EOF
+
+  deploy_test:
+    name: Deploy to AWS
+    uses: ./.github/workflows/deploy_lambda_function.yaml
+    needs: build_files
+    with:
+      function: 'cicd-test-lambda'
+      directory: 'lambda-upload-test'
+    secrets:
+      aws_access_key_id: ${{ secrets.LAMBDA_AWS_ACCESS_KEY_ID }}
+      aws_secret_access_key: ${{ secrets.LAMBDA_AWS_SECRET_ACCESS_KEY }}
