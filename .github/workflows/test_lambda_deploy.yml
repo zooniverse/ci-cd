@@ -8,6 +8,9 @@ jobs:
   build_files:
     runs-on: ubuntu-latest
     steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
     - name: Create Lambda test script
       run: |
         mkdir -p lambda-upload-test
