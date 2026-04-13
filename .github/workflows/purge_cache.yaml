@@ -12,6 +12,14 @@ on:
         description: 'Content path to purge'
         required: true
         type: string
+      endpoint:
+        description: 'Endpoint to purge'
+        required: true
+        type: string
+      domain:
+        description: 'Domain to purge'
+        required: true
+        type: string
     secrets:
       creds:
         required: true
@@ -30,7 +38,9 @@ jobs:
       uses: azure/CLI@v2
       with:
         inlineScript: |
-          az network front-door purge-endpoint \
-            --resource-group 'static-sites' \
-            --name '${{ inputs.fdname }}' \
-            --content-paths '${{ inputs.path }}'
+          az afd endpoint purge \
+              --resource-group 'static-sites' \
+              --profile-name '${{ inputs.fdname }}' \
+              --endpoint-name '${{ inputs.endpoint }}' \
+              --domains '${{ inputs.domain }}' \
+              --content-paths '${{ inputs.path }}'
