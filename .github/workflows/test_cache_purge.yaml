@@ -10,6 +10,8 @@ jobs:
     uses: ./.github/workflows/purge_cache.yaml
     with:
       fdname: 'frontend-preview-zooniverse-org'
+      endpoint: 'main-route'
+      domain: 'frontend.preview.zooniverse.org'
       path: '/assets/star.jpg'
     secrets:
       creds: ${{ secrets.AZURE_STATIC_SITES }}
