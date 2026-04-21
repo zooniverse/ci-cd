@@ -28,11 +28,11 @@ jobs:
     env:
       HEAD_COMMIT: ${{ inputs.commit_id }}
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
 
     - name: Node.js build
       id: build
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v6
       with:
         node-version: ${{ inputs.node_version }}
         cache: 'npm'
@@ -43,7 +43,7 @@ jobs:
       run: echo ${HEAD_COMMIT} > ./${{ inputs.output }}/commit_id.txt
 
     - name: Save build
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: ${{ inputs.output }}
         path: ./${{ inputs.output }}/
