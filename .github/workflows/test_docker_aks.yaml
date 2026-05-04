@@ -29,11 +29,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: test_aks_connection
     steps:
-    - uses: azure/login@v2
+    - uses: azure/login@v3
       with:
        creds: ${{ secrets.AZURE_AKS }}
 
-    - uses: azure/aks-set-context@v4
+    - uses: azure/aks-set-context@v5
       with:
        resource-group: kubernetes
        cluster-name: microservices
