@@ -22,7 +22,7 @@ jobs:
 
     - name: Delete web blob recursively
       id: delete
-      uses: azure/CLI@v2
+      uses: azure/CLI@v3
       with:
         # Pin version due to bug: https://github.com/Azure/azure-cli/issues/32039
         azcliversion: 2.76.0
