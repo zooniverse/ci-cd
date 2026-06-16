@@ -30,4 +30,3 @@ jobs:
             --account-name zooniversestatic \
             --source '$web' \
             --pattern '${{ inputs.target }}/*' \
-            --dryrun
