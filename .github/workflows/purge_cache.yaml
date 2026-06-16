@@ -35,7 +35,7 @@ jobs:
 
     - name: Purge Cache Path
       id: upload
-      uses: azure/CLI@v2
+      uses: azure/CLI@v3
       with:
         inlineScript: |
           az afd endpoint purge \
