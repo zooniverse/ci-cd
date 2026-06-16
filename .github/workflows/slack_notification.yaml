@@ -24,6 +24,11 @@ on:
         description: 'Notification title link'
         required: true
         type: string
+      channel:
+        description: 'Slack channel to send notification to'
+        required: false
+        type: string
+        default: '#deploys'
     secrets:
       slack_webhook_url:
         required: true
@@ -34,26 +39,37 @@ jobs:
     steps:
       - name: Get associated PR info
         run: |
-          response=$(curl https://api.github.com/repos/${{ github.repository }}/commits/${{ inputs.commit_id }}/pulls)
+          response=$(curl -s https://api.github.com/repos/${{ github.repository }}/commits/${{ inputs.commit_id }}/pulls)
           echo "PR_URL=$(jq -r '.[].html_url' <<< "${response}")" >> $GITHUB_ENV
           echo "PR_TITLE=$(jq -r '.[].title' <<< "${response}")" >> $GITHUB_ENV
 
+      - name: Prepare status env vars
+        id: status-vars
+        run: |
+          if [ "${{ inputs.status }}" = "success" ]; then
+            echo "COLOR=good" >> $GITHUB_ENV
+            echo "STATUS_TEXT=:white_check_mark: Success" >> $GITHUB_ENV
+          elif [ "${{ inputs.status }}" = "failure" ]; then
+            echo "COLOR=danger" >> $GITHUB_ENV
+            echo "STATUS_TEXT=:x: Failed" >> $GITHUB_ENV
+          else
+            echo "COLOR=warning" >> $GITHUB_ENV
+            echo "STATUS_TEXT=:warning: Warning" >> $GITHUB_ENV
+          fi
+
       - name: Slack notification
-        uses: 8398a7/action-slack@v3
+        uses: slackapi/slack-github-action@v3
         env:
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
           SLACK_WEBHOOK_URL: ${{ secrets.slack_webhook_url }}
         with:
-          job_name: ${{ inputs.job_name }}
-          fields: took
-          status: custom
-          custom_payload: |
+          payload: |
             {
-              "channel": "#deploys",
+              "channel": "${{ inputs.channel }}",
               "icon_emoji": ":octocat:",
               "username": "Deploy Action",
               "attachments": [{
-                "color": '${{ inputs.status }}' === 'success' ? 'good' : '${{ inputs.status }}' === 'failure' ? 'danger' : 'warning',
-                "mrkdwn_in": ["text"],
+                "color": "${{ env.COLOR }}",
                 "author_name": "${{ github.actor }}",
                 "author_link": "https://github.com/${{ github.actor }}/",
                 "author_icon": "https://github.com/${{ github.actor }}.png?size=40",
@@ -62,7 +78,7 @@ jobs:
                 "fields": [
                     {
                         "title": "Status",
-                        "value": '${{ inputs.status }}' === 'success' ? `:white_check_mark: Success in ${process.env.AS_TOOK}` : '${{ inputs.status }}' === 'failure' ? ':x: Failed' : ':warning: Warning',
+                        "value": "${{ env.STATUS_TEXT }}",
                         "short": true
                     },
                     {
