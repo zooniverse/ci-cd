@@ -1,0 +1,34 @@
+name: Test Slack Notification
+
+on:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      test_status:
+        description: 'Status to test (manual dispatch only)'
+        required: false
+        default: 'success'
+        type: choice
+        options:
+          - success
+          - failure
+          - warning
+      test_channel:
+        description: 'Slack channel'
+        required: false
+        default: '#slack-test'
+        type: string
+
+jobs:
+  test_slack_notification_job:
+    name: Test Slack Notifications
+    uses: ./.github/workflows/slack_notification.yaml
+    with:
+      commit_id: ${{ github.event.pull_request.head.sha || github.sha }}
+      job_name: "Test Slack Notification Job"
+      status: ${{ github.event.inputs.test_status || 'success' }}
+      title: "Test Run of Slack Notifications"
+      title_link: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+      channel: ${{ github.event.inputs.test_channel || '#slack-test' }}
+    secrets:
+      slack_webhook_url: ${{ secrets.slack_webhook_url }}
